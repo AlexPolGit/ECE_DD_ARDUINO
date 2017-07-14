@@ -93,3 +93,4 @@ void MS_DCMotor::readCurrentSensor(void) {
 	currentVolts = voltageMultiplicator * currentRawSensor;
 	currentAmps = currentVolts / voltsPerAmp;
 }
+
