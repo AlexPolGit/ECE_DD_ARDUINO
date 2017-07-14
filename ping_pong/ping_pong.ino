@@ -3,19 +3,19 @@
 MS_DCMotor motorA(MOTOR_A);
 MS_DCMotor motorB(MOTOR_B);
 
-int MOTOR_SPEED = 0;
-int MOTOR_RPM = 0;
+unsigned int MOTOR_SPEED = 0;
+unsigned int MOTOR_RPM = 0;
 String readString = "";
 
-int IR1 = A3;
-int IR2 = A2;
-int ir_val_1 = 0;
-int ir_val_2 = 0;
+unsigned int IR1 = A3;
+unsigned int IR2 = A2;
+unsigned int ir_val_1 = 0;
+unsigned int ir_val_2 = 0;
 
-int writeValues = 0;
+const unsigned int SECOND = 1000;
+unsigned long counts = 0;
 
-long second = 0;
-long counts = 0;
+unsigned long previousMillis = 0;
 
 void setup()
 {
@@ -30,10 +30,7 @@ void setup()
 
 void loop()
 {
-  if (second < millis())
-  {
-    second++;
-  }
+  unsigned long currentMillis = millis();
   
   while (Serial.available())
   {
@@ -54,16 +51,18 @@ void loop()
   ir_val_1 = analogRead(IR1);
   ir_val_2 = analogRead(IR2);
 
-  if (second = 1000)
+  if (currentMillis - previousMillis >= SECOND)
   {
     MOTOR_RPM = counts;
-    second = 0;
+    previousMillis = currentMillis;
     counts = 0;
+
+    Serial.println("Current RPS: " + String(MOTOR_RPM));
   }
-  else if (ir_val_2 < 900)
+  else if (ir_val_2 < 800)
   {
     counts++;
-    Serial.println("Current RPM: " + String(MOTOR_RPM));
+    delay(1);
     //Serial.println("IR Sensor 2 Detection!: " + String(ir_val_1));
   }
 }
